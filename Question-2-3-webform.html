@@ -27,35 +27,51 @@
     </head>
     <body>
         <h1>Feedback form</h1>
-    <form>
+        <!-- add this  aria-labelledby for screen reader-->
+    <form aria-labelledby="form-title">
+        <!-- add a for="name" to associate the label with the input -->
+        <!-- add identify aria-required to required fields -->
         <div class="control">
-          <label for="name">Full name <span class="required">*</span></label><input id="name" name="name" type="text" />
+          <label for="name">Full name <span class="required">*</span></label>
+          <input id="name" name="name" type="text" aria-required="true" required  />
         </div>
+        <!--  Adding aria-describedby to provide additional context -->
         <div class="control">
-          <label for="biography">Biography</label><textarea id="biography" name="biography" type="text"></textarea>
-          <span>Include examples on your skills in JavaScript.</span>
+          <label for="biography">Biography</label>
+          <textarea id="biography" name="biography" aria-describedby="biography-description" type="text"></textarea>
+          <span id="biography-description">Include examples on your skills in JavaScript.</span>
         </div>
         
-          <div>Gender</div>
+        <!-- 2. Grouping gender radio buttons using a fieldset and legend -->
+        <fieldset aria-required="true">
+          <legend>Gender <span class="required">*</span></legend>
           <div class="control">
-            <input id="gender_male" name="gender" type="radio" value="male" /><label>Male</label>
+            <input id="gender_male" name="gender" type="radio" value="male" required />
+            <label for="gender_male">Male</label>
           </div>
           <div class="control">
-            <input id="gender_female" name="gender" type="radio" value="female" /><label>Female</label>
+            <input id="gender_female" name="gender" type="radio" value="female" required />
+            <label for="gender_female">Female</label>
           </div>
-        
+        </fieldset>
+        <!-- Checkbox for accepting terms -->
+        <!-- 1. Associating the label with the checkbox -->
+        <!-- 4. Providing inline instructions using aria-describedby -->
         <div class="control">
-          <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" /><label>I accept the terms and conditions</label>
+          <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" aria-describedby="terms-description" aria-required="true" required  />
+          <label for="accept_agbs">I accept the terms and conditions</label>
+          <span id="terms-description">You must accept the terms and conditions to proceed.</span>
         </div>
+        <!-- change it to a submit button -->
         <div class="control">
-          <input name="validate" type="hidden" value="1" /><input type="submit" value="Register" />
+          <input name="validate" type="hidden" value="1" />
+          <button type="submit">Register</button>
         </div>
-      </form>
+    </form>
       
           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
           <script>"use strict";
-      
-      ;
+
       (function () {
         var validateInput;
       
@@ -76,7 +92,8 @@
       
           if ((value = $.urlParam(input)) === null) {
             if ($('fieldset.errors').length === 0) {
-              $('form').prepend('<fieldset class="errors"><legend>Errors</legend><ul></ul></fieldset>');
+              // If the field is not filled, display an error, add role="alert" for screen reader
+              $('form').prepend('<fieldset class="errors" role="alert"><legend>Errors</legend><ul></ul></fieldset>');
             }
       
             $referencedElement = null;
@@ -92,18 +109,20 @@
               $referencedElement = $input;
             }
       // R.G. hint: fix next line ;)
-            $error = $('<a>' + message + '</a>');
+            // add href a link for error message
+            $error = $('<a href="#' + $input.attr('id') + '">' + message + '</a>');
             $error.click(function (e) {
               // If we rely on the link's href pointing to the input's ID, it doesn't trigger forms mode in screen readers
               $referencedElement.focus();
               return e.preventDefault();
             });
             $elementToDescribe.attr('aria-describedby', input + '_description');
-            $errorContainer.append('<li>').find('li:last').append($error);
+            $errorContainer.append('<li id="' + input + '_error"></li>').find('li:last').append($error);
       
             if ($(':not(form):focus').length === 0) {
               // See https://stackoverflow.com/questions/46134247/jquery-setting-focus-doesnt-work-in-ie11/
-            
+              // Move focus to the error container if no element is focused
+              $('fieldset.errors').focus();
             }
           } else {
             if ($input.is(':checkbox')) {
@@ -127,10 +146,27 @@
       
             if ($('.error').length === 0) {
               return alert('All inputs are valid.');
+            }else{
+              // Move focus to the errors container if there are errors
+              $('fieldset.errors').focus();
             }
           }
         });
-      }).call(void 0);</script>
+        
+        $('form').on('submit', function (e) {
+              e.preventDefault();
+
+              // Trigger validation and move focus to the errors if present
+              if ($('.errors ul li').length > 0) {
+                $('fieldset.errors').focus(); // Move focus to the errors section
+              } else {
+                alert('All inputs are valid.');
+              }
+        });
+
+
+      }).call(void 0)
+      ;</script>
                 
         </body>
       </html>
