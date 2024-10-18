@@ -25,8 +25,16 @@ a{
   color: #006b3a;
 }
 main a{
-  outline: none;
+  outline: none; 
+
 }
+
+/* 3.	Focus indicators for all interactive elements are visible  */
+main a:focus{
+  outline: 2px solid #ff9900; /* Custom focus outline for better visibility */
+  outline-offset: 2px;
+}
+
 h2 {
   margin-top: 0;
 }
@@ -197,7 +205,8 @@ article p {
 </head>
 
 <body>
-  <header>
+  <!-- add a header landmark -->
+  <header role="banner">
 
     <div class="container">
       <h1 class="logo">The Funion</h1>
@@ -206,23 +215,28 @@ article p {
       <nav class="menu">
         <a href="#">Home</a>
         <a href="#">Politics</a>
-        <a href="#" tabindex="-1">Business</a>
+        <!-- 1.	Focus on interactive elements  -->
+        <!--the code before will skip this element, so remove  tabindex="-1"-->
+        <a href="#">Business</a>
         <a href="#">Entertainment</a>
         <a href="#">Sports</a>
         <a href="#" class="btn-search pull-right"><img src="https://raw.githubusercontent.com/udacity/ud891/2de2a0688c68809a3b453db3a24b1a59e8401459/lesson2-focus/02-dom-order/images/search.svg" alt="Search" />Search</a> 
-
       </nav>
     </div>
   </header>
   <div class="newsletter">
     <div class="container">
       <h3>Like the Funion? Consider joining our newsletter!</h3>
-      <input type="text">
-      <button type="button" onfocus="getFocus()">Sign up</button></div>
+      <!-- add label for the input -->
+      <label for="newsletter-email"></label>
+      <input type="email" id="newsletter-email" aria-label="Email address for newsletter subscription">
+      <!-- 4.	Expected behavior when interacting with interactive elements -->
+      <button type="button" aria-label="Sign up for the newsletter" onclick="getFocus()">Sign up</button></div>
       
     </div>
   </div>
-  <main class="container">
+  <!-- add a main landmark -->
+  <main class="container" id="main-content" role="main">      
     <h2 class="offscreen">Top story</h2>
     <article class="main-story">
       <img class="pull-right" src="https://github.com/udacity/ud891/blob/gh-pages/lesson2-focus/02-dom-order/images/cat.jpg?raw=true" alt="A cat staring menacingly off into space">
@@ -239,11 +253,14 @@ article p {
     <div class="side-by-side">
       <div class="column">
         <div class="tier-header">
-          <h2 tabindex="0">In the news</h2>
+          <!-- 2.	Focus order is logical and intuitive -->
+          <!-- To keep the focusable element in order, remove tabindex -->
+          <h2>In the news</h2>
         </div>
         <article>
           <h3 class="headline">Bee wonders if maybe everyone else is a drone and he's the only one who has it "figured out."</h3>
-          <p><a href="#" tabindex="1"><b>Read More</b></a></p>
+          <!-- keep the order of tab -->
+          <p><a href="#"><b>Read More</b></a></p>
           <img src="https://github.com/udacity/ud891/blob/gh-pages/lesson2-focus/02-dom-order/images/bee.jpg?raw=true" alt="A bee on top of a flower" />
         </article>
       </div>
