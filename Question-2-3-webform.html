@@ -43,14 +43,14 @@
         </div>
         
         <!-- 2. Grouping gender radio buttons using a fieldset and legend -->
-        <fieldset aria-required="true">
+        <fieldset>
           <legend>Gender <span class="required">*</span></legend>
           <div class="control">
-            <input id="gender_male" name="gender" type="radio" value="male" required />
+            <input id="gender_male" name="gender" type="radio" value="male" aria-required="true" required />
             <label for="gender_male">Male</label>
           </div>
           <div class="control">
-            <input id="gender_female" name="gender" type="radio" value="female" required />
+            <input id="gender_female" name="gender" type="radio" value="female" aria-required="true" required />
             <label for="gender_female">Female</label>
           </div>
         </fieldset>
