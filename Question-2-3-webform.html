@@ -34,12 +34,14 @@
         <div class="control">
           <label for="name">Full name <span class="required">*</span></label>
           <input id="name" name="name" type="text" aria-required="true" required  />
+          <span class="error" id="name-error" aria-live="polite"></span>
         </div>
         <!--  Adding aria-describedby to provide additional context -->
         <div class="control">
           <label for="biography">Biography</label>
           <textarea id="biography" name="biography" aria-describedby="biography-description" type="text"></textarea>
           <span id="biography-description">Include examples on your skills in JavaScript.</span>
+          <span class="error" id="biography-error" aria-live="polite"></span>
         </div>
         
         <!-- 2. Grouping gender radio buttons using a fieldset and legend -->
@@ -48,11 +50,13 @@
           <div class="control">
             <input id="gender_male" name="gender" type="radio" value="male" aria-required="true" required />
             <label for="gender_male">Male</label>
+            
           </div>
           <div class="control">
             <input id="gender_female" name="gender" type="radio" value="female" aria-required="true" required />
             <label for="gender_female">Female</label>
           </div>
+          <span class="error" id="gender-error" aria-live="polite"></span>
         </fieldset>
         <!-- Checkbox for accepting terms -->
         <!-- 1. Associating the label with the checkbox -->
@@ -89,13 +93,21 @@
         validateInput = function validateInput(input, message) {
           var $elementToDescribe, $error, $errorContainer, $fieldset, $input, $referencedElement, value;
           $input = $('[name="' + input + '"]');
+          var $errorField = $('#' + input + '-error');
       
           if ((value = $.urlParam(input)) === null) {
             if ($('fieldset.errors').length === 0) {
               // If the field is not filled, display an error, add role="alert" for screen reader
               $('form').prepend('<fieldset class="errors" role="alert"><legend>Errors</legend><ul></ul></fieldset>');
             }
-      
+
+            // Add error to the fieldset error list with a link to the input field
+          if (!$('#' + input + '-error-list').length) {
+            $('fieldset.errors ul').append('<li id="' + input + '-error-list"><a href="#' + input + '">' + message + '</a></li>');
+          }
+          // Link the error message to the input field using aria-describedby
+          $('[name="' + input + '"]').attr('aria-describedby', input + '-error');
+          
             $referencedElement = null;
             $elementToDescribe = null;
             $errorContainer = $('fieldset.errors ul');
@@ -144,11 +156,10 @@
             validateInput('gender', 'Please tell us your gender!');
             validateInput('accept_agbs', 'You must accept our terms and conditions!');
       
-            if ($('.error').length === 0) {
-              return alert('All inputs are valid.');
-            }else{
-              // Move focus to the errors container if there are errors
-              $('fieldset.errors').focus();
+            if ($('.errors ul li').length > 0) {
+              $('[aria-describedby]').first().focus();
+            } else {
+              alert('All inputs are valid.');
             }
           }
         });

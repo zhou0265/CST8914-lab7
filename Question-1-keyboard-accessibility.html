@@ -230,8 +230,8 @@ article p {
     <div class="container">
       <h3>Like the Funion? Consider joining our newsletter!</h3>
       <!-- add label for the input -->
-      <label for="newsletter-email"></label>
-      <input type="email" id="newsletter-email" aria-label="Email address for newsletter subscription">
+      <!-- Use aria-label to provide the label for screen readers (no visible label) -->
+      <input type="email" id="newsletter-email" aria-label="Email address for newsletter subscription" placeholder="Enter your email">
       <!-- 4.	Expected behavior when interacting with interactive elements -->
       <button type="button" aria-label="Sign up for the newsletter" onclick="getFocus()">Sign up</button></div>
       
